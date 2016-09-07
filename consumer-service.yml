@@ -1,4 +1,1 @@
-spring:
-  application:
-     name: consumer-service
 defaultnumber: 88
