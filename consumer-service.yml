@@ -1,1 +1,3 @@
 defaultnumber: 88
+server:
+  port: 3311
