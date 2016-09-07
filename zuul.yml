@@ -1,0 +1,23 @@
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+zuul:
+  ignoredServices: "*"
+  routes:
+    consumer-service:
+      path: /getnumber/**
+      stripPrefix: false
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: THREAD
+          thread:
+            timeoutInMilliseconds: 10000
+server:
+  port: 1122
