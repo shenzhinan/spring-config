@@ -9,7 +9,7 @@ zuul:
   ignoredServices: "*"
   routes:
     consumer-service:
-      path: /getnumber/**
+      path: /**
       stripPrefix: false
 hystrix:
   command:
