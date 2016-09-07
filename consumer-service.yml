@@ -1,2 +1,4 @@
-test:
-  number: 88
+spring:
+  application:
+     name: consumer-service
+defaultnumber: 88
