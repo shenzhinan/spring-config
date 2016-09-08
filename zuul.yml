@@ -9,10 +9,10 @@ zuul:
   ignoredServices: "*"
   routes:
     consumer-service:
-      path: cs/**
+      path: /cs/**
       stripPrefix: false
     consumer-service2:
-      path: cs2/**
+      path: /cs2/**
       stripPrefix: false
 hystrix:
   command:
