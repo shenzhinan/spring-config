@@ -11,6 +11,9 @@ zuul:
     consumer-service:
       path: /**
       stripPrefix: false
+    consumer-service2:
+      path: /**
+      stripPrefix: false
 hystrix:
   command:
     default:
