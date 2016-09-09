@@ -15,10 +15,7 @@ zuul:
       path: /cs2/**
       stripPrefix: false
     consumer-service-gateAPI:
-      path: /getresponse
-      stripPrefix: false
-    consumer-service-gateAPI:
-      path: /getdefaultresponse
+      path: /cg/**
       stripPrefix: false
 hystrix:
   command:
