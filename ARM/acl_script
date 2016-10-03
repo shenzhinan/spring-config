@@ -1,0 +1,3 @@
+
+azure group create -n MicroServiceVNETRG -l "West US"
+azure group deployment create -f c:\Users\allan.shen\git\ARM\vnet.json -e c:\Users\allan.shen\git\ARM\vnet_params.json -g MicroServiceVNETRG -n MicroServiceVNET

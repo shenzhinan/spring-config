@@ -1,0 +1,7 @@
+# Spring properties
+spring:
+  application:
+     name: zuul
+  cloud:
+    config:
+      uri: http://configsrv.westus.cloudapp.azure.com:8888

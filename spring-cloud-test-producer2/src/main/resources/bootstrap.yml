@@ -1,0 +1,10 @@
+# Spring properties
+spring:
+  application:
+     name: producer-service2
+  cloud:
+    config:
+      uri: http://configsrv.westus.cloudapp.azure.com:8888
+# HTTP Server
+server:
+  port: 2221   # HTTP (Tomcat) ports

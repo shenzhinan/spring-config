@@ -1,0 +1,195 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmDnsName": {
+      "type": "string",
+      "defaultValue": "chefsrv",
+      "metadata": {
+        "description": "DNS  name for the VM"
+      }
+    },
+    "vnetRgName": {
+      "type": "string",
+      "metadata": {
+        "description": "resource group name of vnet"
+      }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "vnet name"
+      }
+    },
+    "subNetName": {
+      "type": "string",
+      "metadata": {
+        "description": "vnet name"
+      }
+    },
+    "NewStorageAccountSuffix": {
+      "type": "string",
+      "defaultValue": "msstorage",
+      "metadata": {
+        "description": "Unique Name for the Storage Account where the Virtual Machine's disks will be placed"
+      }
+    },
+    "storageAccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "metadata": {
+        "description": "storage account type"
+      }
+    },
+    "adminUserName": {
+      "type": "string",
+      "defaultValue": "demouser",
+      "metadata": {
+        "description": "Admin user name for the Virtual Machines"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Admin password for the Virtual Machines"
+      }
+    },
+    "imagePublisher": {
+      "type": "string",
+      "defaultValue": "chef-software",
+      "metadata": {
+        "description": " Publisher for the OS image, the default is OpenLogic"
+      }
+    },
+    "imageOffer": {
+      "type": "string",
+      "defaultValue": "chef-server",
+      "metadata": {
+        "description": "The name of the image offer. The default is Centos"
+      }
+    },
+    "imageSKU": {
+      "type": "string",
+      "defaultValue": "chefbyol",
+      "metadata": {
+        "description": "Version of the image. The default is 7.2"
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_DS1_v2",
+      "metadata": {
+        "description": "VM Size"
+      }
+    }
+  },
+  "variables": {
+    "vnetID": "[resourceId(parameters('vnetRgName'),'Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/',parameters('subnetName'))]",
+    "publicIPAddressName": "chefsrvPublicIP",
+    "publicIPAddressType": "Dynamic",
+    "nicName": "chefsrvVMNic",
+    "ipconfigName": "chefsrvIpconfig",
+    "uniqueString": "[concat(parameters('newStorageAccountSuffix'),uniqueString(concat(parameters('NewStorageAccountSuffix'))))]",
+    "vmName": "[parameters('vmDnsName')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('uniqueString')]",
+      "apiVersion": "2015-06-15",
+      "tags": {
+        "displayName": "Storage Accounts"
+      },
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "accountType": "[parameters('storageAccountType')]"
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('publicIPAddressName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('vmDnsName')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('nicName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "[variables('ipconfigName')]",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',concat(variables('publicIPAddressName')))]"
+              },
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[variables('vmName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', variables('uniqueString'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+      ],
+      "properties": { 
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[variables('vmName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[parameters('imagePublisher')]",
+            "offer": "[parameters('imageOffer')]",
+            "sku": "[parameters('imageSKU')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {
+              "uri": "[concat('http://',variables('uniqueString'),'.blob.core.windows.net/vhds/','osdisk', '.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName')))]"
+            }
+          ]
+        }
+      },
+      "plan": {
+        "name": "[parameters('imageSKU')]",
+        "product": "[parameters('imageOffer')]",
+        "publisher": "[parameters('imagePublisher')]"
+      }
+    }
+  ]
+}

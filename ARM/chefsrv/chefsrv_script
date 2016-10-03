@@ -1,0 +1,3 @@
+azure group create -n ChefServerRG -l "West US"
+
+azure group deployment create -f c:\Users\allan.shen\git\ARM\chef-server.json -e c:\Users\allan.shen\git\ARM\chef-server-with_params.json -g ChefServerRG -n ChefServer

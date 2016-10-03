@@ -1,0 +1,417 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "newStorageAccountName": {
+      "type": "string",
+      "defaultValue": "microservicestorage",
+      "metadata": {
+        "description": "Unique  Name for the Storage Account where the Virtual Machine's disks will be placed"
+      }
+    },
+    "vmDnsName": {
+      "type": "string",
+      "defaultValue": "configsrv",
+      "metadata": {
+        "description": "DNS  name for the VM"
+      }
+    },
+    "numberOfInstances": {
+      "type": "int",
+      "defaultValue": 2,
+      "metadata": {
+        "description": "Number of VM instances to create, default is 2"
+      }
+    },
+    "adminUserName": {
+      "type": "string",
+      "defaultValue": "demouser",
+      "metadata": {
+        "description": "Admin user name for the Virtual Machines"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Admin password for the Virtual Machines"
+      }
+    },
+    "imagePublisher": {
+      "type": "string",
+      "defaultValue": "OpenLogic",
+      "metadata": {
+        "description": " Publisher for the OS image, the default is OpenLogic"
+      }
+    },
+    "imageOffer": {
+      "type": "string",
+      "defaultValue": "CentOS",
+      "metadata": {
+        "description": "The name of the image offer. The default is Centos"
+      }
+    },
+    "imageSKU": {
+      "type": "string",
+      "defaultValue": "7.2",
+      "metadata": {
+        "description": "Version of the image. The default is 7.2"
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_DS1_v2",
+      "metadata": {
+        "description": "VM Size"
+      }
+    },
+    "chef_node_name": {
+      "type": "string",
+      "defaultValue": "config",
+      "metadata": {
+        "description": "Unique name for the node (VM) in the Chef Organization"
+      }
+    },
+    "chef_server_url": {
+      "type": "string",
+      "defaultValue": "https://chefsrv.westus.cloudapp.azure.com/organizations/azurechef",
+      "metadata": {
+        "description": "Organization URL for the Chef Server. Example https://ChefServerDnsName.cloudapp.net/organizations/Orgname"
+      }
+    },
+    "validation_client_name": {
+      "type": "string",
+      "defaultValue": "azurechef-validator",
+      "metadata": {
+        "description": "Validator key name for the organization. Example : MyOrg-validator"
+      }
+    },
+    "runlist": {
+      "type": "string",
+      "defaultValue": "recipe[config]",
+      "metadata": {
+        "description": "Optional Run List to Execute"
+      }
+    },
+    "validation_key": {
+      "defaultValue": "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEAu7Sf0sYEXF5cedz4Ujvob1OqfV5C+oVxHZrSN7Vav+vgHou1\nqo4uYrJyET1wmS+TKLTeBrnlyCctYGIet/8NoLejsQGgLQhnEQGB0IA32Jth02w8\nvl29YtcWOeYXclkJYy0KyeANrbw9WZcKnQLLGKz6t52CAhXzM9qjesQrqT7svY6d\nePb4eXzea6CD8qijia34Mqhj6TkJgMvh/egJFPa53I6PK9vT3fJCRp1vnI7qtkwD\nfhA9swR8zO75OcF6TxhmcFyAO7vwf3KD4UtjpATK/hU9Z2VWBwGB7jETN1v6V907\nvqGeNWLtrZtW1FlRLiKmRE8YsknWFj4U/FkaMwIDAQABAoIBAC87bTgRYcmIaQa1\nJrsynfNdfzoavQnjCCql6Z3hAZvnk7a7+xOWwW9ObcuOxUWWphYJJRFWN87cpNtq\n9UXhZSF69DK3MQID6kNqOKspiGP1/XDA/Kv+VIiJjOs2zdGVO/p7vAo+WdLM2jcv\n/Ziyuj5UUKZhePRjZ5Y1vwtGT6I/Z9Pw+jaZ2rPHNFZS8jFW5KfxvDBGBF7qAizo\nkXgj7ZWIimiSUNuLEBbI25SJJSQ5lwFLJMkzLfjuG4p8LJtbSoG+TeQjSxw3cFK0\nEvOoc/y1wwDhDhmhcqZkc/c/+PoQc38CllMvJLd/mxNp9Z2aEK5Inbfg96Qj7uE8\nUdCQ2gECgYEA5DusfRYS8hgiUFZEuTFzptNzrTRG4K9xdzDvdJVMGdefD60XJoNR\n5v2GA7MHA+eHYLuPxCsGC00Id/UcHIm39SemdEbwOLsDaF1czR0KoKgDiX9FmzmM\nL3eTENycb7XQ6t1tuq2BiT4A30t7KPX79N54QGdrVeMKQTARf0+RnwECgYEA0oq4\nIfnrQRSvHEGMxsqwycAUQg1LwQa7Zk3E8yYtaR+4sDTzV71jYsfpb8+zBS70xHF1\nKdmRa6HbmSl7emo2qjlUzFrc4j/2mjNPU9K+6X73T0U3sEuBYC+6CUBWtiJAqZ7i\nO+moMcycRr/PaMmdVDvGdu5fyV/XisJzguSjbTMCgYB64yKJq1QCJDp9lSWlrVm/\nDoVvUgGDwxNOAPw9gpGaLH4Je8JGS1jTDdiVr1RspsI+tF7BWgUEGrMfm8tKFmEF\nUBcQ7o0zjoZUMEjia+un+y8EXpHE9WRkvnZiEtbsUzIs85K8e+WOVuMzV7n1oRTL\nkOmgi87ATOHdnZseOGKJAQKBgFxFc2FgmFvTZtMpXzsYRdaFmdtA3HxiKOszFifC\nCZDS2CxRaHyBgfceyg24pyqUY61cVA7dTUAwlX9QkM8bkY2Uxrcw8zEs+zSlXBTO\nfeDzRgu1uCxJSxAOmqfHTLlR1akA+wFq6823cJ4JHis8gPkToW0qF0y39kzX36vz\n7DPFAoGAezp7glEZb8egPqWXiV6731X/UNstqLMde5p8vdUDWie9H+0UA04jvuJn\nABMP+xxbvpOQHR8fWOKYOAEiEnhThFeqtpsmjYlNTrA4X2dD3dDhsaULfjthRQG4\nhb24DdXmWctJVDucQpaT9EtKhmL5V/ewcrFyBUZAdSyz2eSmL0o=\n-----END RSA PRIVATE KEY-----\n",
+      "type": "string",
+      "metadata": {
+        "description": "JSON Escaped Validation Key"
+      }
+    },
+    "validation_key_format": {
+      "type": "string",
+      "allowedValues": [
+        "plaintext",
+        "base64encoded"
+      ],
+      "defaultValue": "plaintext",
+      "metadata": {
+        "description": "Format in which Validation Key is given. e.g. plaintext, base64encoded"
+      }
+    },
+    "ssl_verify_mode": {
+      "defaultValue": "none",
+      "type": "String"
+    },
+    "chef_environment": {
+      "defaultValue": "_default",
+      "type": "String"
+    },
+    "databag_secret": {
+      "defaultValue": "",
+      "type": "SecureString"
+    },
+    "chef_server_crt": {
+      "defaultValue": "-----BEGIN CERTIFICATE-----\nMIID+zCCAuOgAwIBAgIBADANBgkqhkiG9w0BAQsFADBgMQswCQYDVQQGEwJVUzEQ\nMA4GA1UECgwHWW91Q29ycDETMBEGA1UECwwKT3BlcmF0aW9uczEqMCgGA1UEAwwh\nY2hlZnNydi53ZXN0dXMuY2xvdWRhcHAuYXp1cmUuY29tMB4XDTE2MDkxOTE4NTU0\nMloXDTI2MDkxNzE4NTU0MlowYDELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1lvdUNv\ncnAxEzARBgNVBAsMCk9wZXJhdGlvbnMxKjAoBgNVBAMMIWNoZWZzcnYud2VzdHVz\nLmNsb3VkYXBwLmF6dXJlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC\nggEBAL3tU+6CDstNPzPyUxtq+RKbm2opYl5SZqxi0c6YgvDLdDWo3rOpCNqf7hPW\nCfVFfnrcR64Hw48hLLL8qv2xqHcvMZpnFxlhudSmPs7xtu6tA8pyBTtPpHbfBW6o\nsBM9TdPsUSg7+zhD0vUIuBLT0I1mZCuQnfyHYRnlwuk3hvbin0Oo6xoBAno1MYMf\nDtx3vIDUjyvnH/ZDJfGfDLgcE0iRuoTD5HtxMkab+0/6IXwG2k/4kiSZ0mX614V3\n+KKxBKo0LywgRW3uiZDigaZg5q+ZDW/G2Ab6Jyo+b1aADwHpqNuchG7koLhgrnmU\ncQJ00nUfkw5lZl61Al7G2o62/E0CAwEAAaOBvzCBvDAPBgNVHRMBAf8EBTADAQH/\nMB0GA1UdDgQWBBS43JF3iLBkl23sL8MRqRShrfpnxTCBiQYDVR0jBIGBMH+AFLjc\nkXeIsGSXbewvwxGpFKGt+mfFoWSkYjBgMQswCQYDVQQGEwJVUzEQMA4GA1UECgwH\nWW91Q29ycDETMBEGA1UECwwKT3BlcmF0aW9uczEqMCgGA1UEAwwhY2hlZnNydi53\nZXN0dXMuY2xvdWRhcHAuYXp1cmUuY29tggEAMA0GCSqGSIb3DQEBCwUAA4IBAQBD\nDiExwPvxNliO1mogRsqz177N9i5BHpaBz2vF+uq49hsU3vI++EmaFeS4JPaR094G\ntJ4WPkRPba/HKiJogsDnoV91P1uleB+OV03KBUxzv+6XvGVlNCAo/3ciT7kzp4P+\n3hy9323yYLEJisdCX1UHMSSK/ZZvRZ5I1K20rl25l958acXtrVj+i5EwOg4ubwAt\ncwG2kQbSZ+dP/A5jnvrHgNuvs0lZeAYwEW46t/H4KAtl0z7TltaGt5O/qGYneVMe\nXL7gV8ptLqm4x37DZNLj5MlebedqXI2QrngIE037uqBUQV0XYzYA3wVdE+WnDrzF\nUfwI0GCsafMZcwnahQuh\n-----END CERTIFICATE-----\n",
+      "type": "SecureString"
+    },
+    "client_rb": {
+      "defaultValue": "",
+      "type": "String"
+    }
+  },
+  "variables": {
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+    "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet1Name'))]",
+    "vmExtensionName": "LinuxChefExtension",
+    "vmName": "[parameters('vmDnsName')]",
+    "storageAccountType": "Standard_LRS",
+    "publicIPAddressName": "chefPublicIP",
+    "publicIPAddressType": "Dynamic",
+    "vmStorageAccountContainerName": "vhds",
+    "virtualNetworkName": "MyVNET",
+    "addressPrefix": "10.0.0.0/16",
+    "subnet1Name": "subnet-1",
+    "subnet2Name": "subnet-2",
+    "subnet1Prefix": "10.0.0.0/24",
+    "subnet2Prefix": "10.0.1.0/24",
+    "nicName": "myVMNic",
+    "dnsName": "[variables('subnet1Name')]",
+    "availabilitySetName": "[concat(parameters('vmDnsName'),'AS')]",
+    "NewStorageAccountSuffix": "[parameters('vmDnsName')]",
+    "ScaleSetName": "configset",
+    "PublicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]",
+    "LBName": "loadBalancer1",
+    "LBID": "[resourceId('Microsoft.Network/loadBalancers',variables('LBName'))]",
+    "LBFEName": "loadBalancerFrontEnd",
+    "LBWebProbeName": "loadBalancerWebProbe",
+    "LBBEAddressPool": "loadBalancerBEAddressPool",
+    "LBFEIPConfigID": "[concat(variables('LBID'),'/frontendIPConfigurations/',variables('LBFEName'))]",
+    "LBBEAddressPoolID": "[concat(variables('LBID'),'/backendAddressPools/',variables('LBBEAddressPool'))]",
+    "LBWebProbeID": "[concat(variables('LBID'),'/probes/',variables('LBWebProbeName'))]",
+    "NamingInfix": "[toLower(variables('ScaleSetName'))]",
+    "uniqueStringArray": [
+      "[concat(uniqueString(concat(resourceGroup().id, variables('NewStorageAccountSuffix'), '0')), variables('newStorageAccountSuffix'))]",
+      "[concat(uniqueString(concat(resourceGroup().id, variables('NewStorageAccountSuffix'), '1')), variables('newStorageAccountSuffix'))]"
+    ]
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('uniqueStringArray')[copyIndex()]]",
+      "apiVersion": "2015-06-15",
+      "copy": {
+        "name": "storageLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
+      "tags": {
+        "displayName": "Storage Accounts"
+      },
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "accountType": "[parameters('storageAccountType')]"
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "name": "[variables('lbName')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/',variables('publicIPAddressName'))]"
+      ],
+      "tags": {
+        "displayName": "Load Balancer"
+      },
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "[variables('LBFEName')]",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[variables('PublicIPAddressID')]"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "[variables('LBBEAddressPool')]"
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "weblb",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('LBFEIPConfigID')]"
+              },
+              "backendAddressPool": {
+                "id": "[variables('LBBEAddressPoolID')]"
+              },
+              "probe": {
+                "id": "[variables('LBWebProbeID')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 80,
+              "backendPort": 80,
+              "enableFloatingIP": false
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "[variables('LBWebProbeName')]",
+            "properties": {
+              "protocol": "Http",
+              "port": 80,
+              "intervalInSeconds": 15,
+              "numberOfProbes": 2,
+              "requestPath": "/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('availabilitySetName')]",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "platformUpdateDomainCount": 5,
+        "platformFaultDomainCount": 3
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[concat(variables('publicIPAddressName'),copyIndex())]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "publicIPLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[concat(parameters('vmDnsName'),copyIndex())]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[variables('virtualNetworkName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('addressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('subnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('subnet1Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('subnet2Name')]",
+            "properties": {
+              "addressPrefix": "[variables('subnet2Prefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('nicName'),copyIndex())]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'),copyIndex())]",
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "[concat('ipconfig',copyIndex())]",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',concat(variables('publicIPAddressName'),copyIndex()))]"
+              },
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(variables('vmName'),copyIndex())]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), copyIndex())]",
+        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[concat(variables('vmName'),copyIndex())]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[parameters('imagePublisher')]",
+            "offer": "[parameters('imageOffer')]",
+            "sku": "[parameters('imageSKU')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {
+              "uri": "[concat('http://',parameters('newStorageAccountName'),'.blob.core.windows.net/vhds/','osdisk', copyindex(), '.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName'),copyIndex()))]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmName'),copyIndex(),'/', variables('vmExtensionName'))]",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "extensionLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'), copyIndex())]"
+      ],
+      "properties": {
+        "publisher": "Chef.Bootstrap.WindowsAzure",
+        "type": "LinuxChefClient",
+        "typeHandlerVersion": "1210.12",
+        "settings": {
+          "bootstrap_options": {
+            "chef_node_name": "[concat(parameters('chef_node_name'),copyIndex())]",
+            "chef_server_url": "[parameters('chef_server_url')]",
+            "validation_client_name": "[parameters('validation_client_name')]",
+            "node_ssl_verify_mode": "[parameters('ssl_verify_mode')]",
+            "environment": "[parameters('chef_environment')]",
+            "secret": "[parameters('databag_secret')]",
+            "client_rb": "[parameters('client_rb')]"
+          },
+          "runlist": "[parameters('runlist')]",
+          "validation_key_format": "[parameters('validation_key_format')]"
+        },
+        "protectedSettings": {
+          "validation_key": "[parameters('validation_key')]",
+          "chef_server_crt": "[parameters('chef_server_crt')]"
+        }
+      }
+    }
+  ]
+}

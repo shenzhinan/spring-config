@@ -1,0 +1,7 @@
+# Spring properties
+spring:
+  application:
+     name: hystrix-dashboard
+  cloud:
+    config:
+      http://configsrv.westus.cloudapp.azure.com:8888

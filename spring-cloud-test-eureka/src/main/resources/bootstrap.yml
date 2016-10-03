@@ -1,0 +1,7 @@
+# Spring properties
+spring:
+  application:
+     name: eureka-peer2
+  cloud:
+    config:
+      uri: http://configsrv.westus.cloudapp.azure.com:80

@@ -1,0 +1,50 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmDnsName": {
+      "value": "configsrv"
+    },
+    "vnetRgName": {
+      "value": "MicroServiceVNETRG"
+    },
+    "virtualNetworkName": {
+      "value": "MicroServiceVNET"
+    },
+    "subNetName": {
+      "value": "BackEndNetwork"
+    },
+    "adminPassword": {
+      "value": "demo@pass123"
+    },
+    "validation_key": {
+      "value": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpQIBAAKCAQEAwptjv7apFu4RanP3iL9ws0mmo0Oh+jxPIX21U75s3/m3TwZp\nYx+fuQGTrsa/3sTXvwtRPgDTHlDd8idBV++H5/KRIS92glC3zE+AK8paWGq6xtQ8\nz2Edwye6J4NeLBgLYGCsaGyf2LiNGMv6Jo4/n44/3lTyiz187oj+Q9pa8yC+cmdP\n37qQOXht+6++32iGFEa6SG8pMXtd/3CgisOIje82XUoa57PO6Grhq8py+bPyrOzL\ngsvf+h5RhHUYaTB/awCLVILGHOFGDTprITIKeTP5NSjnwFyrp97XJAMtTFDOtyKJ\nvBD8IocATsJPGagHNs1KUC308cY9IZhMvTGsEQIDAQABAoIBAQCfTzm/LbcKcGWN\ncdXH+oA2JSrnKGynP0vALPqNzauvRuvLI4KOhMrqVuIhB872fMnpOUiOq3oorSak\nH4KcjBgDx00Lj6FCWPW9qa9RKdv/2Y+BSSlm0yfcJN99jUtAaYaWpU0+Rv4sGhhX\nnlPv0C9BXN/oED5lwjZNx5Pu1Af0UwBSQWAiWo0leOjFocnOWMtbOFO2zFbHdwap\n0ev+RnRa+bdcNLRExcyRuU8tEkT/HsjxYAMam7TyNArv28ifSlWpDkVdpJMmMce8\nmD38g9jAgZ96tp8YGXed36bKOkbZHhtQ9Gc87ubX/99U8cIqLkvdFdgmAxfH0Mvp\nUpqTtSiJAoGBAPg/KAf9VXblgSRlajcSU+z154iyk/VnRe1HLmM1z85ERY7Tf6BU\ndmqGFbrif+3MYAWAXAGI06esns99vNG7TvJaKlo9qM0nReSc02Y2mETKhHZX6+Aw\nlULzCtjeKwPXDiDaisFsMNNKXlzL7/J6U0QXgBIhBUSe8ttQN+cwruP/AoGBAMiv\nXBccElKKSU+uv2Hp1OhFYIGXYghXCmsYPipb1xg8LXmWY0jRlgsW4jKeQ0k6jlJj\n05SbbfBpx6GJ7/Co9jBRJkl2nn6hFjQlBQtm+tJm5hlhTuLTbdFJDwZxR9LJ0cUV\nyZaVuP6olPCPXbLiiHfAf+EQU/pzq86j1VJ18S/vAoGAAkHwx0HSiSZFKmORt7Z+\n9OS3mlKlbdHmnOXM0jInFaUhTM83lemuugFGKVDuAOee5+3m6EyqQBgdyZ1HHlEp\nwqJ3SCLPai41QIL8mS1d7SI6Wikqh/tpIBa9voMmuP43rqzOHjwxpXpDqWxhXj8m\nirP8Ai4yshEP/Faaa4vRy1kCgYEAnKLCbgcrBeGJdvgdyH6J/wCnYn6VtYy6RPyX\nCNjF+dR+afhHZf6v7dfelUORoQZjL0tbSRJHrO3jMuJGtMAr52pvR8edzZhNjEWY\nul2WR8KotgaNW91KSZ+MaqrgNFXxtLJctXwG+Dz8gwZjS8wkV9OX/EKSSVkfMBoP\n1lzX82ECgYEA8cFMLIxw4O9ujyIy96MWV0IT9cWotsOBPW+nSAf4Ei7a1UtC02Kp\n0/Xw7XVfO4FDg1YZaTCg+DeVnCkjNvHA5Z9sF305t9+m6BmJvzL2UYFAZ+tA4ITs\nOdZsHZ1sai6OA+o93Z7glu/FrwRybUP4ZkRL33WaakKhs1Snhuh4DDM=\n-----END RSA PRIVATE KEY-----"
+    },
+    "chef_server_crt": {
+      "value": "-----BEGIN CERTIFICATE-----\nMIID+zCCAuOgAwIBAgIBADANBgkqhkiG9w0BAQsFADBgMQswCQYDVQQGEwJVUzEQ\nMA4GA1UECgwHWW91Q29ycDETMBEGA1UECwwKT3BlcmF0aW9uczEqMCgGA1UEAwwh\nY2hlZnNydi53ZXN0dXMuY2xvdWRhcHAuYXp1cmUuY29tMB4XDTE2MDkyNjIyMjc1\nMFoXDTI2MDkyNDIyMjc1MFowYDELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1lvdUNv\ncnAxEzARBgNVBAsMCk9wZXJhdGlvbnMxKjAoBgNVBAMMIWNoZWZzcnYud2VzdHVz\nLmNsb3VkYXBwLmF6dXJlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC\nggEBALlWy/ng6nDhzzkaWtDI54XGcv/rtcoq9ZwP3othHHBXa3+qkyVKMyg4LGCT\nk8QCE8t1nZ9DGQgo1RJ2huALTto/dVmT6N7ZeUQVxzNYQVuSybWxpM0kdnWhE6qi\nU3Vi4PBhOBs6uUf9HMZfzRp1hdTZkcKHKXm375j371bOgNgLZNiOU4mWQWlP2h5o\ny0LjKKeJ0x12x5diWwjCtgysV3QqLuT7WgjjZKlmziaro76TSFbhC5umX7NQDWLy\nLcAP5yHsJ9vnUWDtOhvP7G4CcX7acLS/KH03AR7zOPSlGgQYIeTpMxydL3CGTman\nH2rZvgA9BuXPtuSA9J2C+P5T2VcCAwEAAaOBvzCBvDAPBgNVHRMBAf8EBTADAQH/\nMB0GA1UdDgQWBBQnCbvi/B1Vjg3m1XUdGE8b1Ut73zCBiQYDVR0jBIGBMH+AFCcJ\nu+L8HVWODebVdR0YTxvVS3vfoWSkYjBgMQswCQYDVQQGEwJVUzEQMA4GA1UECgwH\nWW91Q29ycDETMBEGA1UECwwKT3BlcmF0aW9uczEqMCgGA1UEAwwhY2hlZnNydi53\nZXN0dXMuY2xvdWRhcHAuYXp1cmUuY29tggEAMA0GCSqGSIb3DQEBCwUAA4IBAQAV\nB9OwYmeKEHvSnIwWm9W1xaI1O4QGahlDKxmuyOangzLpWzoOEvfsqjhcE/n3LPAG\n4g8WATieWrZK+DLgYUkRqAPIYFSNJJYvhqGZKxjSSdVjnGWNTF2BHgZ4a9+z+jk/\nFNtuIJvREZXS4w1E+MbE6enmK99EldNnkIcRWcqgsw2MLbw8GoiEBCz8mQAhg0v/\nWsZMyY8OFUW2NknUdhiYZ3XQGd3Md6Co7bSQmoPiDw6L8vEfAecdIbkYTOL85ruu\ncV2+UEFpTKWdSeQa3XSv3Q3Ko7oxFlOY8YeUTNhqvcZsrAF6A1M1t5Td73sfI+si\n72bbdJshvGjgvZDuOQRB\n-----END CERTIFICATE-----"
+    },
+    "chef_node_name": {
+      "value": "config"
+    },
+    "chef_server_url": {
+      "value": "https://chefsrv.westus.cloudapp.azure.com/organizations/mschef"
+    },
+    "validation_client_name": {
+      "value": "mschef-validator"
+    },
+    "runlist": {
+      "value": "recipe[java_se::_linux_install],recipe[config]"
+    },
+    "healthProbePath": {
+      "value": "/shenzhinan/spring-config"
+    }
+    ,
+    "frontendPort": {
+      "value": 80
+    }
+    ,
+    "backendPort": {
+      "value": 8888
+    }
+  }
+}

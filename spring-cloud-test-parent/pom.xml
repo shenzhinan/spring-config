@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>spring-cloud-test</groupId>
+  <artifactId>spring-cloud-test-parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Spring Cloud Test Parent</name>
+  <parent>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-parent</artifactId>
+      <version>Brixton.SR5</version>  <!-- Name of release train -->
+  </parent>
+  <modules>
+	<module>../spring-cloud-test-eureka</module>
+	<module>../spring-cloud-test-zuul</module>
+	<module>../spring-cloud-test-hystrix-ds</module>
+	<module>../spring-cloud-test-producer</module>
+	<module>../spring-cloud-test-consumer</module>
+	<module>../spring-cloud-test-producer2</module>
+	<module>../spring-cloud-test-consumer2</module>
+	<module>../spring-cloud-test-consumer-gateAPI</module>
+	<module>../spring-cloud-test-configServer</module>
+  </modules>
+  <dependencies>
+        <dependency>
+            <!-- Setup Spring Boot -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <!-- Setup Spring MVC & REST, use Embedded Tomcat -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <!-- Spring Cloud starter -->
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <!-- Eureka for service registration -->
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka-server</artifactId>
+        </dependency>
+        <!--dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
+        </dependency-->
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+        </plugins>
+    </build>
+</project>
